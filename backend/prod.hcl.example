@@ -1,0 +1,4 @@
+bucket = "YOUR-UNIQUE-STATE-BUCKET"
+key    = "team-infra/prod/terraform.tfstate"
+region = "ap-south-1"
+use_lockfile = true
