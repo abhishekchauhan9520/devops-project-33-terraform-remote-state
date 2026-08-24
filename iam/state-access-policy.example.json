@@ -1,0 +1,34 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListOnlyEnvironmentPrefix",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::YOUR-STATE-BUCKET",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": [
+            "team-infra/dev/*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "ReadWriteDevStateAndLock",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject"],
+      "Resource": [
+        "arn:aws:s3:::YOUR-STATE-BUCKET/team-infra/dev/terraform.tfstate"
+      ]
+    },
+    {
+      "Sid": "ManageDevLockFile",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+      "Resource": [
+        "arn:aws:s3:::YOUR-STATE-BUCKET/team-infra/dev/terraform.tfstate.tflock"
+      ]
+    }
+  ]
+}
