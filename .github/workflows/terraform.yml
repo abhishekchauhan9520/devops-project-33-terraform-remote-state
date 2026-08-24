@@ -1,0 +1,33 @@
+name: Terraform Remote State Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.2
+      - name: Run repository tests
+        run: bash tests/test_remote_state.sh
+      - name: Format check bootstrap
+        run: terraform -chdir=bootstrap fmt -check -recursive
+      - name: Validate bootstrap without backend
+        run: |
+          terraform -chdir=bootstrap init -backend=false
+          terraform -chdir=bootstrap validate
+      - name: Format check infrastructure
+        run: terraform -chdir=infra fmt -check -recursive
+      - name: Validate infrastructure without backend
+        run: |
+          terraform -chdir=infra init -backend=false
+          terraform -chdir=infra validate
